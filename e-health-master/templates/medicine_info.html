@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block body %}
+    <br>
+    <br>
+
+        <div class="body_style">
+        <table id="customers">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <tr>
+              <th>name</th>
+            <th>ingredients</th>
+              <th>price</th>
+            <th>directions</th>
+              <th>warnings</th>
+          </tr>
+                <tr>
+                <td>
+                    {{ data['name'] }}
+                </td>
+                <td>
+                    {{ data['ingredients'] }}
+                </td>
+                    <td>
+                    ${{ data['price'] }}
+                </td>
+                    <td>
+                    {{ data['directions'] }}
+                </td>
+                    <td>
+                    {{ data['warnings'] }}
+                </td>
+                </tr>
+
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="body_style">
+        {% if appointments %}
+
+            <table id="customers">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+            <h2>History</h2>
+              <tr>
+                  <th>Appointment Type</th>
+                  <th>Starts</th>
+                  <th>Ends</th>
+                  <th>{% if current_user.get_type() == 'Patient' %}
+                                Health Provider
+                            {% else %}
+                                Patient
+                            {% endif %}</th>
+                  <th>Fee</th>
+                  <th>Details</th>
+              </tr>
+                {% for row in appointments %}
+                    {% if row['finished'] %}
+                        <tr>
+                        <td>
+                            {{ row['type'] }}
+                        </td>
+                        <td>
+                            {{ row['start_time'] }}
+                        </td>
+                        <td>
+                            {{ row['end_time'] }}
+                        </td>
+                        <td>
+                            {% if current_user.get_type() == 'Patient' %}
+                                <form method="post" action="{{ url_for('profile', id=row['health_provider']) }}">
+                                    <button type="submit">{{ row['health_provider'] }}</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{{ url_for('profile', id=row['patient']) }}">
+                                    <button type="submit">{{ row['patient'] }}</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            ${{ '%0.1f' %row['fee'] }}
+                        </td>
+                        <td>
+                            <form method="post">
+                                <button type="submit" name="start_time" value="{{ row['start_time'] }}">Details</button>
+                            </form>
+                        </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+            </table>
+        {% else %}
+            <h1>No History at the moment</h1>
+        {% endif %}
+    </div>
+{% endblock %}

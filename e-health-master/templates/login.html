@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="search_style">
+<h1>
+<form method="post">
+    Email: <input type="text" name="email">
+    {% if 'email' in errors %}
+        <font size="3" color="red">{{ errors['email'] }}</font><br>
+    {% endif %}
+    Password: <input type="password" name="password">
+    {% if 'password' in errors %}
+        <font size="3" color="red">{{ errors['password'] }}</font><br>
+    {% endif %}
+    <button>Login</button>
+</form>
+    </h1>
+</div>
+{% endblock %}

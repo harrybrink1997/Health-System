@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="search_style">
+<form action="{{ url_for('search') }}" method="post">
+
+    <h1>Search:</h1> <h2><input type="text" name="name" placeholder="Leave empty if you want to search all"><br>
+    <input type="radio" name="select" value="health_centre"> By health centre name<br>
+    <input type="radio" name="select" value="health_provider" > By health provider name<br>
+    <input type="radio" name="select" value="suburb" > By suburb<br>
+    <input type="radio" name="select" value="service" > By service<br>
+
+    {% if 'radio' in errors %}
+        <font size="3" color="red">{{ errors['radio'] }}</font><br>
+    {% endif %}
+    <button type="submit" name="search"> Search </button>
+</h2>
+
+</form>
+<br><br>
+<h1>Results: {{ results|length }} items found</h1><br>
+    </div>
+    <div class="body_style">
+{% if results|length != 0 or services%}
+<table id="customers">
+  <col width="80">
+  <col width="140">
+  <col width="80">
+  <col width="80">
+  <col width="80">
+  <col width="80">
+{% if services %}
+    <tr>
+        <th>Name</th>
+        <th>Detail</th>
+    </tr>
+    {% for service in services %}
+        <tr>
+        <td>
+            {{ service }}
+        </td>
+
+        <td>
+            <form method="post">
+                <button type="submit" name="service_type" value="{{ service }}">Details</button>
+            </form>
+        </td>
+        </tr>
+    {% endfor %}
+{% else %}
+
+  <tr>
+      {% if 'service' in results[0] %}
+          <th>Service</th>
+      {% endif %}
+  {% if 'suburb' in results[0] %}
+          <th>Suburb</th>
+      {% endif %}
+      <th>Name</th>
+
+    {% if 'suburb' in results[0] %}
+      <th>Health Centre Type</th>
+        {% else %}
+              <th>Health Provider Type</th>
+
+      {% endif %}
+      <th>Rating</th>
+      <th>Contact</th>
+      <th>Detail</th>
+  </tr>
+    {% for row in results %}
+        <tr>
+        {% if 'suburb' in row %}
+          <td>
+            {{ row['suburb'] }}
+        </td>
+        {% endif %}
+        {% if 'service' in row %}
+          <td>
+            {{ row['service'] }}
+        </td>
+        {% endif %}
+        <td>
+            {{ row['name'] }}
+        </td>
+        <td>
+            {{ row['type'] }}
+        </td>
+        <td>
+            {{ '%0.1f' % ((row['ratings'].values() | sum) / (row['ratings'] | length)|float)  }}
+        </td>
+        <td>
+            {{ row['phone'] }}
+        </td>
+        <td>
+            <form method="post">
+                {% if 'tfn'in row %}
+                    <button type="submit" name="details" value="{{ row['email'] }}">Details</button>
+                {% else %}
+                    <button type="submit" name="details" value="{{ row['abn'] }}">Details</button>
+                {% endif %}
+
+            </form>
+        </td>
+        </tr>
+    {% endfor %}
+{% endif %}
+</table>
+{% endif %}
+</div>
+{% endblock %}

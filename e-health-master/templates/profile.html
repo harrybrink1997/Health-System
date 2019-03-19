@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="search_style">
+    <h2>
+    Information:
+    <table id="customers">
+      <col width="40">
+      <col width="80">
+      <col width="80">
+      <col width="80">
+      <col width="80">
+      <col width="80">
+        {% for field in info %}
+            {% if field != 'password' and field != 'tfn' and field != 'refers' %}
+
+                <tr>
+                    <td>
+                        {{ field }}
+                    </td>
+                    <td>
+                        {% if field == 'services' %}
+                            {% for service in info[field] %}
+                                {{ service.name }}
+                            {% endfor %}
+                        {% elif field == 'ratings' %}
+                            {{ '%0.1f' % ((info['ratings'].values() | sum) / (info['ratings'] | length)|float)  }}
+                        {% else %}
+                        {{ info[field] }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    </h2>
+    </div>
+{% if current_user.get_type() == 'Patient' %}
+    <div class="search_style">
+    <h2>
+        Rate
+        <form method="post">
+            <input type="number" name="rating" min="1" max="10">
+            <button type="submit" name="rate">Rate</button>
+        </form>
+    </h2>
+
+    <h2>
+        Make Appointment:
+    </h2>
+    </div>
+<div class="body_style">
+<table id="customers">
+  <col width="130">
+  <col width="80">
+  <col width="80">
+  <col width="80">
+  <col width="80">
+  <col width="80">
+
+  {% if 'service' not in contains[0] %}
+
+      <tr>
+          <th>Name</th>
+
+          {% if "suburb" in info %}
+              <th>Health Provider Type</th>
+              {% else %}
+          <th>Health Centre Type</th>
+              {% endif %}
+          <th>Rating</th>
+          <th>Contact</th>
+          <th>Appointment</th>
+      </tr>
+        {% for row in contains %}
+            <tr>
+            <td>
+                {{ row['name'] }}
+            </td>
+            <td>
+                {{ row['type'] }}
+            </td>
+            <td>
+                {{ '%0.1f' % ((row['ratings'].values() | sum) / (row['ratings'] | length)|float)  }}
+            </td>
+            <td>
+                {{ row['phone'] }}
+            </td>
+            <td>
+                {% if current_user.get_type() == 'Patient' and
+                    (
+                        ('tfn' not in row and (info['email'] in current_user.refers.values()
+                            or
+                            info['type'] == 'GPDoctor'
+                            or
+                            info['type'] == 'Nurse')))
+                        or
+                        ('tfn' in row and row['email'] in current_user.refers.values()
+                            or
+                            (row['type'] == 'GPDoctor'
+                            or
+                            row['type'] == 'Nurse' or row['email'] in current_user.refers.values()))
+
+                        %}
+                    <form method="post">
+                        {% if 'tfn'in row %}
+                            <button type="submit" name="appointment" value="{{ row['email'] }}">Make</button>
+                        {% elif 'abn' in row %}
+                            <button type="submit" name="appointment" value="{{ row['abn'] }}">Make</button>
+                        {% else %}
+                            <button>Book With Pathologist</button>
+                        {% endif %}
+                    </form>
+                {% else %}
+                    {% if row['type'] == 'Service' %}
+                        <button>Book With Pathologist</button>
+                    {% else %}
+                        <button>Not Available</button>
+                    {% endif %}
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+
+    </table>
+    </div>
+      {% else %}
+        <tr>
+          <th>Service Type</th>
+          <th>Book</th>
+      </tr>
+       {% for row in providers %}
+            <tr>
+            <td>
+            {{ row }}
+            </td>
+                <td>
+                    <form method="post">
+
+                        <button type="submit" name="service" value="{{ row }}">book</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+
+      {% endif %}
+    {% elif info['type'] == 'Patient' %}
+    <div class="search_style">
+    <h2>
+        <!--
+        Send Referral
+        <form method="post">
+            <input type="text" name="referred">
+            {% if 'refer' in errors %}
+                <font size="3" color="red">{{ errors['refer'] }}</font><br>
+            {% endif %}
+            <button type="submit" name="refer">Refer</button>
+        </form>
+        -->
+    </h2>
+    </div>
+
+
+    <!--
+    <table id="customers">
+              <col width="5">
+              <col width="5">
+              <col width="5">
+              <col width="500">
+            <h2>History</h2>
+              <tr>
+                  <th>Starts</th>
+                  <th>Ends</th>
+                  <th>
+                      Health Provider
+                  </th>
+                  <th>Notes</th>
+              </tr>
+                {% for row in history %}
+                    {% if row['finished'] %}
+                        <tr>
+                        <td>
+                            {{ row['start_time'] }}
+                        </td>
+                        <td>
+                            {{ row['end_time'] }}
+                        </td>
+                        <td>
+                            {% if current_user.get_type() != 'Patient' %}
+                                <form method="post" action="{{ url_for('profile', id=row['patient']) }}">
+                                    <button type="submit">{{ row['patient'] }}</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{{ url_for('profile', id=row['health_provider']) }}">
+                                    <button type="submit">{{ row['health_provider'] }}</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ row['notes'] }}
+                        </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+            </table>
+    -->
+    {% endif %}
+{% endblock %}

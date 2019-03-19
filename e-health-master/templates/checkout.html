@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block body %}
+    <br>
+
+{% if table['items']|length == 0 %}
+    <div class="search_style">
+    <h1>Currently nothing in your cart</h1>
+    <form action="{{ url_for('shop') }}">
+    <button>Go Shopping</button>
+    </form>
+    {% else %}
+
+<div class="body_style">
+
+<table id="customers">
+  <col width="130">
+  <col width="80">
+  <col width="130">
+  <col width="80">
+
+  <tr>
+    <th>Item</th>
+    <th>Qty</th>
+    <th>Total</th>
+      <th>Action</th>
+
+  </tr>
+  {% for i in table['items'] %}
+    <tr>
+      <td>{{ i.item.name }}</td>
+      <td>{{ i.qty }} </td>
+      <td>${{ i.qty * i.item.price }} </td>
+
+    <td><form method="post">
+        <input type="number"  name="qty">
+        <input hidden name="id" value="{{ i.item.item_code }}">
+        <input hidden name="action" value="update">
+        <button>Update Qty</button>
+    </form> </td>
+
+
+    </tr>
+
+    {% for j in i.active_discounts %}
+            <tr><td></td><td></td><td>
+        + {{ j | string }} <td></td>
+    </tr>
+    {% endfor %}
+      <tr><td></td><td>Net:</td><td>${{ i.net_price }}</td><td><form method="post">
+        <input hidden name="id" value="{{ i.item.item_code }}">
+        <input hidden name="action" value="remove">
+        <button>Remove</button>
+    </form> </td></tr>
+
+      </tr>
+
+
+    <br>
+{% endfor %}
+
+
+</table>
+
+<h1>
+<br>
+{% for i in table['groups'] %}
+     {{ i.cat }} Discounts: {{ i.discount }}<br>
+{% endfor %}
+
+Total: ${{ table['total'] }}<br>
+
+<form action="{{ url_for('shop') }}">
+    <button>Continue Shopping</button>
+</form>
+<form method="post">
+    <input hidden name="action" value="purchase">
+    <button>Checkout</button>
+</form>
+</h1>
+{% endif %}
+    </div>
+{% endblock %}

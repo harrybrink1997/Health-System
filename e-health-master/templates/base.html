@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>E-Health System</title>
+    <style>
+    body, html{
+  height: 100%;
+  background: papayawhip;
+	font-family: 'Lato', sans-serif;
+}
+
+    .search_style{
+  display: block;
+  position: relative;
+  margin: 40px auto;
+  height: auto;
+  width: 500px;
+  padding: 20px;
+}
+    .button_style{
+  width: 200px;
+}
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e7e7e7;
+        background-color: tomato;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: block;
+        color: #666;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li a:hover:not(.active) {
+        background-color: orangered;
+    }
+
+    li a.active {
+        color: white;
+        background-color: red;
+    }
+
+    h2 {
+	color: black;
+    }
+
+    h1 {
+	color: black;
+    }
+
+    input[type=text], select, input[type=number], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+        background-color : #d1d1d1;
+        font-size:15px;
+        color: #666666;
+    }
+
+    button {
+        width: 100%;
+        background-color: lightsalmon;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: salmon;
+    }
+
+        .shop_style{
+  display: block;
+  position: relative;
+  margin: 40px auto;
+  height: auto;
+  width: 500px;
+  padding: 20px;
+}
+                .body_style{
+  display: block;
+  position: relative;
+
+  margin: 40px auto;
+   margin-top: 0;
+  height: auto;
+  width: 900px;
+}
+                                .manage_style{
+  display: block;
+  position: relative;
+
+  margin: 40px auto;
+   margin-top: 0;
+  height: auto;
+  width: 900px;
+}
+
+
+        #customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+
+}
+
+#customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+
+}
+
+#customers tr:nth-child(odd){background-color: #f2f2f2;}
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: sandybrown;
+    color: white;
+}
+
+
+
+</style>
+</head>
+
+<body>
+<br>
+<ul>
+{% if not current_user.is_anonymous %}
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('display_appointments') }}">Appointments</a></li>
+    <li><a href="{{ url_for('display_history') }}">History</a></li>
+{% endif %}
+
+{% if not current_user.is_anonymous and current_user.get_type() == 'Patient' %}
+    <li><a href="{{ url_for('search') }}">Search</a></li>
+
+    <!--
+    <li><a href="{{ url_for('display_referrals') }}">Referrals</a></li>
+    -->
+{% else %}
+
+{% endif %}
+
+{% if not current_user.is_anonymous and current_user.get_type() != 'Patient' %}
+
+    <!--
+    <li><a href="{{ url_for('add_hospital') }}">Add Hospital</a></li>
+    -->
+
+{% endif %}
+
+{% if current_user.is_anonymous %}
+    <li><a href="{{ url_for('login') }}">Login</a></li>
+    <!--
+    <li><a href="{{ url_for('register') }}">Register</a></li>
+    -->
+{% else %}
+    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+{% endif %}
+<br>
+</ul>
+{% block body %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="body_style">
+        {% if notes %}
+            <h1>Notes</h1>
+            <h2>{{ notes }}</h2>
+        {% else %}
+            <h1>No Notes Provided</h1>
+        {% endif %}
+        {% if medicines %}
+
+            <table id="customers">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+            <h1>medicines</h1>
+              <tr>
+                  <th>Code</th>
+                  <th>Name</th>
+                  <th>ingredients</th>
+                  <th>Price</th>
+                  <th>Directions</th>
+                  <th>Warnings</th>
+              </tr>
+                {% for row in medicines %}
+
+                    <tr>
+                        <td>
+                            {{ row['code'] }}
+                        </td>
+                        <td>
+                            {{ row['name'] }}
+                        </td>
+                        <td>
+                            {{ row['ingredients'] }}
+                        </td>
+                        <td>
+                            ${{ row['price'] }}
+                        </td>
+                        <td>
+                            {{ row['directions'] }}
+                        </td>
+                        <td>
+                            {{ row['warnings'] }}
+                        </td>
+                        </tr>
+                {% endfor %}
+
+            </table>
+        {% else %}
+            <h1>No medicines Prescribed</h1>
+        {% endif %}
+    </div>
+{% endblock %}

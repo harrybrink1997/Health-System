@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="search_style">
+<form method="post">
+
+    <h1>Make Appointment</h1><br>
+    <h2>
+    <input type="hidden" name="start_date" value="{{ start }}">
+    Date <input {% if fee %}readonly value="{{start}}"{% endif %} type="date" name="start"> <br>
+    <button type="submit" name="search"> Search </button>
+
+    {% if 'start' in errors %}
+        <font size="3" color="red">{{ errors['start'] }}</font><br>
+    {% endif %}
+    <div class="button_style">
+    {% for slot in slots %}
+        <button type="submit" name="slot" value="{{ slot }}"> {{ slot }} </button>
+    {% endfor %}
+    </div>
+    {% if 'end' in errors %}
+        <font size="3" color="red">{{ errors['end'] }}</font><br>
+    {% endif %}
+    {% if 'period' in errors %}
+        <font size="3" color="red">{{ errors['period'] }}</font><br>
+    {% endif %}
+    {% if 'overlap' in errors %}
+        <font size="3" color="red">{{ errors['overlap'] }}</font><br>
+    {% endif %}
+    {% if 'closed' in errors %}
+        <font size="3" color="red">{{ errors['closed'] }}</font><br>
+    {% endif %}
+
+    {% if health_provider['type'] == 'Pathologist'%}
+        Service: <select name="service">
+            {% for service in services %}
+            <option value="{{ service.price }}">{{ service.name }}</option>
+            {% endfor %}
+    </select><br>
+    {% endif %}
+
+    {% if fee %}
+        Fee is ${{ '%0.1f' %fee }}<br>
+        <button type="submit" name="button" value="confirm"> Confirm </button><br>
+    {% endif %}
+
+    </h2>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="search_style">
+    <form method="post">
+
+        <h1>Search:</h1> <h2><input type="text" name="hospital" ><br>
+        {% if "hospital" in errors %}
+            <font size="3" color="red">{{ errors['hospital'] }}</font><br>
+        {% endif %}
+        <button type="submit" name="add"> Add Hospital </button>
+    </h2>
+
+    </form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block body %}
+    <br>
+    <br>
+
+        <div class="body_style">
+        {% if referrals %}
+        <table id="customers">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+          <col width="80">
+            <h1>Referrals</h1>
+          <tr>
+              <th>From</th>
+            <th>To</th>
+          </tr>
+            {% for row in referrals %}
+                <tr>
+                <td>
+                    <form method="post" action="{{ url_for('profile', id=row[1]) }}">
+                        <button type="submit">{{ row[0]}} ({{ row[1]}})</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post" action="{{ url_for('profile', id=row[3]) }}">
+                        <button type="submit">{{ row[2]}} ({{ row[3]}})</button>
+                    </form>
+                </td>
+                </tr>
+            {% endfor %}
+    {% else %}
+        <h1>No Referrals Found</h1>
+    {% endif %}
+</table>
+</div>
+{% endblock %}

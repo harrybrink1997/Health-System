@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="search_style">
+<h1>
+<form method="post">
+    {% if type %}
+        Email: <input type="text" name="email">
+        {% if 'email' in errors %}
+            <font size="3" color="red">{{ errors['email'] }}</font><br>
+        {% endif %}
+        Password: <input type="password" name="password">
+        {% if 'password' in errors %}
+            <font size="3" color="red">{{ errors['password'] }}</font><br>
+        {% endif %}
+        Name: <input type="text" name="name">
+        {% if 'name' in errors %}
+            <font size="3" color="red">{{ errors['name'] }}</font><br>
+        {% endif %}
+        Phone: <input type="text" name="phone">
+        {% if 'phone' in errors %}
+            <font size="3" color="red">{{ errors['phone'] }}</font><br>
+        {% endif %}
+        TFN: <input type="text" name="tfn">
+        {% if 'tfn' in errors %}
+            <font size="3" color="red">{{ errors['tfn'] }}</font><br>
+        {% endif %}
+        {% if type == "Specialist" %}
+            Expertise: <input type="text" name="expertise">
+            {% if 'expertise' in errors %}
+                <font size="3" color="red">{{ errors['expertise'] }}</font><br>
+            {% endif %}
+        {% endif %}
+        <input type="hidden" name="type" value="{{ type }}">
+        <button>Register</button>
+    {% else %}
+        <input type="radio" name="type" value="Patient"> Patient<br>
+        <input type="radio" name="type" value="GPDoctor"> GPDoctor<br>
+        <input type="radio" name="type" value="Pathologist" > Pathologist<br>
+        <input type="radio" name="type" value="Pharmacist" > Pharmacist<br>
+        <input type="radio" name="type" value="Specialist" > Specialist<br>
+
+        {% if 'radio' in errors %}
+            <font size="3" color="red">{{ errors['radio'] }}</font><br>
+        {% endif %}
+        <button type="submit" name="choose"> Register </button>
+
+
+    {% endif %}
+</form>
+    </h1>
+</div>
+{% endblock %}

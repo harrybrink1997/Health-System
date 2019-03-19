@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="body_style">
+        {% if appointments %}
+
+            <table id="customers">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+              <col width="80">
+            <h2>Future Appointments</h2>
+              <tr>
+                  <th>Appointment Type</th>
+                  <th>Starts</th>
+                  <th>Ends</th>
+                  <th>
+                      {% if current_user.get_type() == 'Patient' %}
+                        Health Provider
+                      {% else %}
+                          Patient
+                      {% endif %}
+                  </th>
+                  <th>Fee</th>
+                 {% if current_user.get_type() != 'Patient' %}
+                                <th>
+                                    Start Appointment
+                                </th>
+                 {% endif %}
+              </tr>
+                {% for row in appointments %}
+                    {% if not row['finished'] %}
+                        <tr>
+                        <td>
+                            {{ row['appointment_type'] }}
+                        </td>
+                        <td>
+                            {{ row['start_time'] }}
+                        </td>
+                        <td>
+                            {{ row['end_time'] }}
+                        </td>
+                        <td>
+                            {% if current_user.get_type() != 'Patient' %}
+                                <form method="post" action="{{ url_for('profile', id=row['patient']) }}">
+                                    <button type="submit">{{ row['patient'] }}</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{{ url_for('profile', id=row['health_provider']) }}">
+                                    <button type="submit">{{ row['health_provider'] }}</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                        <td>
+                            ${{ '%0.1f' %row['fee'] }}
+                        </td>
+                        {% if current_user.get_type() != 'Patient' %}
+                                <td>
+                                    <form method="post">
+                                        <button type="submit" name="start" value="{{ row['start_time'] }}">Start</button>
+                                    </form>
+                                </td>
+                        {% endif %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+
+            </table>
+        {% else %}
+            <h1>No Appointments at the moment</h1>
+        {% endif %}
+    </div>
+{% endblock %}
